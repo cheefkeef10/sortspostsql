@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пузырьковая сортировка</title>
+</head>
+<body>
+  <input type="text" id="inputArray" placeholder="Введите массив чисел через запятую">
+  <button onclick="sortAndSave()">Сортировать и сохранить</button>
+  
+  <script>
+    async function sortAndSave() {
+      const inputArray = document.getElementById('inputArray').value.split(',').map(Number);
+      const sortedArray = bubbleSort(inputArray);
+      
+      try {
+        const response = await fetch('/saveArray', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ array: sortedArray }),
+        });
+        const data = await response.text();
+        alert(data);
+      } catch (err) {
+        console.error(err);
+      }
+      
+    }
+
+    function bubbleSort(arr) {
+      const len = arr.length;
+      for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len - 1; j++) {
+          if (arr[j] > arr[j + 1]) {
+            const temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+          }
+        }
+      }
+      document.getElementById("result").innerHTML = "Отсортированный массив: " + arr;
+      return arr;
+      
+    }
+    
+  </script>
+  <p id="result"></p>
+</body>
+</html>
